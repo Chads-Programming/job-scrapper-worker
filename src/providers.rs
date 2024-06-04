@@ -1,6 +1,7 @@
 #[derive(Debug)]
 pub enum CustomError {
     ScrapperError(String),
+    ParserError(String),
     FetchError(String)
 }
 
@@ -17,7 +18,14 @@ pub struct JobTitle {
     pub url: String,
     pub salary_info: Option<String>,
 }
+
+pub struct JobQuery {
+    pub search: Option<&'static str>,
+}
+
 pub trait JobScrapper {
     fn find_job_titles(&self, content: &str) -> Vec<JobTitle>;
-    fn load_raw_content(&self) -> Result<String, CustomError>;
+    async fn load_raw_content(&self, query: &JobQuery) -> Result<String, CustomError>;
+    fn get_domain(&self) -> String;
 }
+
